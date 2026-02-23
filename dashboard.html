@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBP9FtjX-v7fxgLBBXSqqmBzIB9ILwL8Gk",
+  authDomain: "break-monitor-bitbab.firebaseapp.com",
+  projectId: "break-monitor-bitbab",
+  storageBucket: "break-monitor-bitbab.firebasestorage.app",
+  messagingSenderId: "330634101343",
+  appId: "1:330634101343:web:92709bb5051701a62f91ea"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.generateQR = async function() {
+  const today = new Date().toISOString().split("T")[0];
+  const code = "BREAK-" + today;
+
+  await setDoc(doc(db, "daily_barcode", today), {
+    code: code,
+    date: today
+  });
+
+  document.getElementById("qr").innerHTML = "";
+  new QRCode(document.getElementById("qr"), code);
+}
+</script>
+</head>
+
+<body style="font-family:sans-serif;text-align:center;margin-top:60px;">
+<h2>Dashboard</h2>
+
+<button onclick="generateQR()">Generate Barcode Hari Ini</button>
+
+<br><br>
+
+<div id="qr"></div>
+
+<br><br>
+
+<a href="scan.html">Halaman Scan Crew</a>
+
+</body>
+</html>
